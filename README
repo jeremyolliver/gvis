@@ -1,7 +1,8 @@
 Gvis
 ====
 
-Introduction goes here.
+This Rails Plugin is for easy embedding of charts utilizing the Google Vizualisation API
+This Plugin is still extremely early, I'll update this README once charts are actually embeddable
 
 
 Example
@@ -10,4 +11,4 @@ Example
 Example goes here.
 
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 [Jeremy Olliver], released under the MIT license
