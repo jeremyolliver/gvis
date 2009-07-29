@@ -21,14 +21,16 @@ module GoogleVisualisation
   # This code actually inserts the visualisation data
   def render_visualisations
     if @google_visualisations
-      @google_visualisations.each do |vis|
+      @google_visualisations.each do |id, vis|
         generate_visualisation(vis.first, vis.second, vis.third)
       end
     end
     "<!-- Rendered Google Visualisations /-->"
   end
   
-  # Call this method from the view to insert the visualisation data here
+  ########################################################################
+  # Call this method from the view to insert the visualisation data here #
+  ########################################################################
   def visualise(id, chart, data, options = {})
     options.symbolize_keys!
     html_options = options.delete(:html)
@@ -39,10 +41,9 @@ module GoogleVisualisation
   ###################################################
   # Internal methods for handling options correctly #
   ###################################################
-  
   def generate_visualisation(chart, data, options)
     # TODO, write the options parsing etc
-    concat(chart.inspect)
+    concat("this is a " + chart.inspect)
   end
   
 end
