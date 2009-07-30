@@ -60,12 +60,33 @@ module GoogleVisualisation
     size_options = []
     size_options << "width: #{options[:width].to_i}" if options[:width]
     size_options << "height: #{options[:height].to_i}" if options[:height]
+    concat "chartData['#{id}'] = new google.visualization.DataTable();"
+    # TODO: how to make this work when columns not explic
+    if options[:columns]
+      options[:columns].each do |col,name|
+        concat "chartData['#{id}'].addColumn('#{kind}', '#{name}');"
+      end
+    end
     concat %Q(
-      chartData['#{id}'] = new google.visualization.DataTable();
       chartData['#{id}'].addRows(#{to_js_table(data)});
       visualizationCharts['#{id}'] = new google.visualization.#{chart.to_s.camelize}(document.getElementById('#{id}'));
       visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{size_options.join(',')}});
     )
+  end
+  
+  def col_type(data)
+    case data.class
+    when String
+      "string"
+    when Fixnum
+      "number"
+    when Float
+      "number"
+    when Date
+      "date"
+    when Time
+      "datetime"
+    end
   end
   
   # Recursive data parsing to js format. Mostly the same as to_json, but altered to support Google API specific date and datetime options
