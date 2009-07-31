@@ -59,8 +59,11 @@ module GoogleVisualisation
     # Generate the js chart data
     concat "chartData['#{id}'] = new google.visualization.DataTable();"
     # TODO: how to make this work when columns not explic
+    column_types = []
     if options[:columns]
       options[:columns].each do |col,kind|
+        kind.downcase!
+        column_types << kind
         concat "chartData['#{id}'].addColumn('#{kind}', '#{col}');"
       end
       options.delete(:columns)
@@ -70,7 +73,7 @@ module GoogleVisualisation
       option_str << "#{key}: #{val}"
     end
     concat %Q(
-      chartData['#{id}'].addRows(#{data.to_json});
+      chartData['#{id}'].addRows(#{data_to_js(data,column_types)});
       visualizationCharts['#{id}'] = new google.visualization.#{chart.to_s.camelize}(document.getElementById('#{id}'));
       visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str.join(',')}});
     )
@@ -91,28 +94,25 @@ module GoogleVisualisation
     end
   end
   
-  # Recursive data parsing to js format. Mostly the same as to_json, but altered to support Google API specific date and datetime options
-  # def to_js_table(data, options = {})
-  #   case data.class
-  #   when String
-  #     data.to_json
-  #   when Fixnum
-  #     data.to_json
-  #   when Float
-  #     data.to_json
-  #   when Date
-  #     "new Date (#{data.year},#{data.month},#{data.day})"
-  #   when Time
-  #     "new Date (#{data.year}, #{data,month},#{data.day}, #{data.hour}, #{data.min}, #{data.sec})"
-  #   when Array
-  #     contents = data.each {|el| to_js_table(el) }
-  #     "[#{contents.join(',')}]"
-  #   when Hash
-  #     contents = data.each {|key,val| to_js_table(key) + ": " + to_js_table(val) }
-  #     "{#{contents.join(',')}}"
-  #   else
-  #     data.to_json
-  #   end
-  # end
+  def data_to_js(data, col_types)
+    ds = "["
+    data.each do |row|
+      rs = "["
+      row.each_with_index do |entry,index|
+        safe_val = if col_types[index] == "date"
+          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month},#{entry.day})"
+        elsif col_types[index] == "datetime"
+          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month},#{entry.day},#{entry.hour},#{entry.min},#{entry.sec})"
+        else
+          entry.to_json
+        end
+        rs += safe_val
+        rs += (entry == row.last) ? "]" : ","
+      end
+      ds += rs
+      ds += (row == data.last) ? "]" : ","
+    end
+    ds
+  end
   
 end
