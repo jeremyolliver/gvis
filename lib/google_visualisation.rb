@@ -47,7 +47,11 @@ module GoogleVisualisation
     @visualisation_packages ||=[]
     @visualisation_packages << chart
     @google_visualisations.merge!(id => [chart, data, options])
-    %Q(<div id="#{id}" ><!-- /--></div>)
+    html = ""
+    html_options.each do |key, value|
+      html += %Q(#{key}="#{value}" )
+    end
+    %Q(<div id="#{id}" #{html}><!-- /--></div>)
   end
   
   protected
