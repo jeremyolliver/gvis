@@ -55,22 +55,24 @@ module GoogleVisualisation
   ###################################################
   # Internal methods for building the script data   #
   ###################################################
-  def generate_visualisation(id, chart, data, options)
+  def generate_visualisation(id, chart, data, options={})
     # Generate the js chart data
-    size_options = []
-    size_options << "width: #{options[:width].to_i}" if options[:width]
-    size_options << "height: #{options[:height].to_i}" if options[:height]
     concat "chartData['#{id}'] = new google.visualization.DataTable();"
     # TODO: how to make this work when columns not explic
     if options[:columns]
-      options[:columns].each do |col,name|
-        concat "chartData['#{id}'].addColumn('#{kind}', '#{name}');"
+      options[:columns].each do |col,kind|
+        concat "chartData['#{id}'].addColumn('#{kind}', '#{col}');"
       end
+      options.delete(:columns)
+    end
+    option_str = []
+    options.each do |key, val|
+      option_str << "#{key}: #{val}"
     end
     concat %Q(
-      chartData['#{id}'].addRows(#{to_js_table(data)});
+      chartData['#{id}'].addRows(#{data.to_json});
       visualizationCharts['#{id}'] = new google.visualization.#{chart.to_s.camelize}(document.getElementById('#{id}'));
-      visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{size_options.join(',')}});
+      visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str.join(',')}});
     )
   end
   
@@ -90,23 +92,27 @@ module GoogleVisualisation
   end
   
   # Recursive data parsing to js format. Mostly the same as to_json, but altered to support Google API specific date and datetime options
-  def to_js_table(data, options = {})
-    case data.class
-    when String || Fixnum || Float
-      data.to_json
-    when Date
-      "new Date (#{data.year},#{data.month},#{data.day})"
-    when Time
-      "new Date (#{data.year}, #{data,month},#{data.day}, #{data.hour}, #{data.min}, #{data.sec})"
-    when Array
-      contents = data.each {|el| to_js_table(el) }
-      "[#{contents.join(',')}]"
-    when Hash
-      contents = data.each {|key,val| to_js_table(key) + ": " + to_js_table(val) }
-      "{#{contents.join(',')}}"
-    else
-      data.to_json
-    end
-  end
+  # def to_js_table(data, options = {})
+  #   case data.class
+  #   when String
+  #     data.to_json
+  #   when Fixnum
+  #     data.to_json
+  #   when Float
+  #     data.to_json
+  #   when Date
+  #     "new Date (#{data.year},#{data.month},#{data.day})"
+  #   when Time
+  #     "new Date (#{data.year}, #{data,month},#{data.day}, #{data.hour}, #{data.min}, #{data.sec})"
+  #   when Array
+  #     contents = data.each {|el| to_js_table(el) }
+  #     "[#{contents.join(',')}]"
+  #   when Hash
+  #     contents = data.each {|key,val| to_js_table(key) + ": " + to_js_table(val) }
+  #     "{#{contents.join(',')}}"
+  #   else
+  #     data.to_json
+  #   end
+  # end
   
 end
