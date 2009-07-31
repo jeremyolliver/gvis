@@ -41,7 +41,10 @@ module GoogleVisualisation
   # Call this method from the view to insert the visualisation data here #
   ########################################################################
   def visualise(id, chart, data, options = {})
+    raise "Error, columns not specified, please specify :columns => [['string','mycolumn'],['number','othercolumn']]" unless options[:columns]
     options.symbolize_keys!
+    # Set default options
+    options = ({:width => 600, :height => 400})
     html_options = options.delete(:html)
     @google_visualisations ||= {}
     @visualisation_packages ||=[]
