@@ -44,7 +44,7 @@ module GoogleVisualisation
     raise "Error, columns not specified, please specify :columns => [['string','mycolumn'],['number','othercolumn']]" unless options[:columns]
     options.symbolize_keys!
     # Set default options
-    options = ({:width => 600, :height => 400})
+    options = ({:width => 600, :height => 400}).merge(options)
     html_options = options.delete(:html)
     @google_visualisations ||= {}
     @visualisation_packages ||=[]
