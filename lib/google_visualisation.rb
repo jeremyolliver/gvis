@@ -40,38 +40,21 @@ module GoogleVisualisation
   ########################################################################
   # Call this method from the view to insert the visualisation data here #
   ########################################################################
-  # def visualise(id, chart, data, options = {})
-  #   raise "Error, columns not specified, please specify :columns => [['string','mycolumn'],['number','othercolumn']]" unless options[:columns]
-  #   options.symbolize_keys!
-  #   # Set default options
-  #   options = ({:width => 600, :height => 400}).merge(options)
-  #   html_options = options.delete(:html) || {}
-  #   @google_visualisations ||= {}
-  #   @visualisation_packages ||=[]
-  #   @visualisation_packages << chart
-  #   @google_visualisations.merge!(id => [chart, data, options])
-  #   html = ""
-  #   html_options.each do |key, value|
-  #     html += %Q(#{key}="#{value}" )
-  #   end
-  #   %Q(<div id="#{id}" #{html}><!-- /--></div>)
-  # end
-  
   def visualization(id, chart_type, options = {}, &block)
     init
-    options.symbolize_keys!
+    options.stringify_keys!
     @visualisation_packages << chart_type
-    table = DataTable.new(options.delete(:data), options.delete(:columns), options)
+    table = DataTable.new(options.delete("data"), options.delete("columns"), options)
     if block_given?
-      yield table.customise(block)
+      yield table
     end
-    html_options = options.delete(:html) || {}
+    html_options = options.delete("html") || {}
     @google_visualisations.merge!(id => [chart_type, table, options])
     html = ""
     html_options.each do |key, value|
       html += %Q(#{key}="#{value}" )
     end
-    %Q(<div id="#{id}" #{html}><!-- /--></div>)
+    concat %Q(<div id="#{id}" #{html}><!-- /--></div>)
   end
   
   protected
