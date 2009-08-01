@@ -1,7 +1,10 @@
-############################################
-# include this Module in ApplicationHelper #
-############################################
-module GoogleVisualisation
+# Provides calls for simplifying the loading and use of the Google Visualization API
+#
+# For use with rails, include this Module in ApplicationHelper
+# See the Readme for usage details
+#
+# written by Jeremy Olliver
+module GoogleVisualization
   
   attr_accessor :google_visualisations, :visualisation_packages
   
@@ -42,6 +45,7 @@ module GoogleVisualisation
   ########################################################################
   def visualization(id, chart_type, options = {}, &block)
     init
+    chart_type = chart_type.camelize
     options.stringify_keys!
     @visualisation_packages << chart_type
     table = DataTable.new(options.delete("data"), options.delete("columns"), options)
@@ -78,7 +82,7 @@ module GoogleVisualisation
       option_str << "#{key}: #{val}"
     end
     concat %Q(
-      chartData['#{id}'].addRows(#{data_to_js(table.data,table.column_types)});
+      chartData['#{id}'].addRows(#{table.js_format_data});
       visualizationCharts['#{id}'] = new google.visualization.#{chart.to_s.camelize}(document.getElementById('#{id}'));
       visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str.join(',')}});
     )
@@ -97,27 +101,6 @@ module GoogleVisualisation
     when Time
       "datetime"
     end
-  end
-  
-  def data_to_js(data, col_types)
-    ds = "["
-    data.each do |row|
-      rs = "["
-      row.each_with_index do |entry,index|
-        safe_val = if col_types[index] == "date" || entry.is_a?(Date)
-          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month},#{entry.day})"
-        elsif col_types[index] == "datetime" || entry.is_a?(Time)
-          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month},#{entry.day},#{entry.hour},#{entry.min},#{entry.sec})"
-        else
-          entry.to_json
-        end
-        rs += safe_val
-        rs += (entry == row.last) ? "]" : ","
-      end
-      ds += rs
-      ds += (row == data.last) ? "]" : ","
-    end
-    ds
   end
   
 end
