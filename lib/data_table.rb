@@ -14,24 +14,29 @@ class DataTable
   
   attr_accessor :data, :columns, :column_types
   
-  def initialize(data, columns = [])
+  def initialize(data = nil, columns = [], options = {})
     @columns, @column_types = [], {}
-    if !columns.empty?
+    unless columns.empty?
       columns.each do |type, name|
         @columns << name.to_s
         @column_types.merge!(name.to_s => type.to_s)
       end
-    elsif !data.empty?
-      row = data.first
-      row.each_with_index do |val, index|
-        name = "Column #{index + 1}"
-        @columns << name
-        @column_types.merge!(name => DataTable.determine_type(val))
-      end
-    else
-      raise "Unable to determine column types" # TODO: perhaps a default set should be used
     end
     @data = data
+  end
+  
+  def register_column(type, name, options = {})
+    @columns << name.to_s
+    @column_types.merge!(name.to_s => type.to_s)
+  end
+  
+  def method_missing(method, *arguments)
+    if ["string", "number", "date", "datetime"].include?(method.to_s)
+      options = arguments.extract_options!
+      register_column(method, arguments, options)
+    else
+      raise NoMethodError.new(method)
+    end
   end
   
   # Class Methods

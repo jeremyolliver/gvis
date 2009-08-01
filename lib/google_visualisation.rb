@@ -40,16 +40,33 @@ module GoogleVisualisation
   ########################################################################
   # Call this method from the view to insert the visualisation data here #
   ########################################################################
-  def visualise(id, chart, data, options = {})
-    raise "Error, columns not specified, please specify :columns => [['string','mycolumn'],['number','othercolumn']]" unless options[:columns]
+  # def visualise(id, chart, data, options = {})
+  #   raise "Error, columns not specified, please specify :columns => [['string','mycolumn'],['number','othercolumn']]" unless options[:columns]
+  #   options.symbolize_keys!
+  #   # Set default options
+  #   options = ({:width => 600, :height => 400}).merge(options)
+  #   html_options = options.delete(:html) || {}
+  #   @google_visualisations ||= {}
+  #   @visualisation_packages ||=[]
+  #   @visualisation_packages << chart
+  #   @google_visualisations.merge!(id => [chart, data, options])
+  #   html = ""
+  #   html_options.each do |key, value|
+  #     html += %Q(#{key}="#{value}" )
+  #   end
+  #   %Q(<div id="#{id}" #{html}><!-- /--></div>)
+  # end
+  
+  def visualization(id, chart_type, options = {}, &block)
+    init
     options.symbolize_keys!
-    # Set default options
-    options = ({:width => 600, :height => 400}).merge(options)
+    @visualisation_packages << chart_type
+    table = DataTable.new(options.delete(:data), options.delete(:columns), options)
+    if block_given?
+      yield table.customise(block)
+    end
     html_options = options.delete(:html) || {}
-    @google_visualisations ||= {}
-    @visualisation_packages ||=[]
-    @visualisation_packages << chart
-    @google_visualisations.merge!(id => [chart, data, options])
+    @google_visualisations.merge!(id => [chart_type, table, options])
     html = ""
     html_options.each do |key, value|
       html += %Q(#{key}="#{value}" )
@@ -59,28 +76,26 @@ module GoogleVisualisation
   
   protected
   
+  def init
+    @google_visualisations ||= {}
+    @visualisation_packages ||=[]
+  end
+  
   ###################################################
   # Internal methods for building the script data   #
   ###################################################
-  def generate_visualisation(id, chart, data, options={})
+  def generate_visualisation(id, chart, table, options={})
     # Generate the js chart data
     concat "chartData['#{id}'] = new google.visualization.DataTable();"
-    # TODO: how to make this work when columns not explic
-    column_types = []
-    if options[:columns]
-      options[:columns].each do |col,kind|
-        kind.downcase!
-        column_types << kind
-        concat "chartData['#{id}'].addColumn('#{kind}', '#{col}');"
-      end
-      options.delete(:columns)
+    table.columns.each do |col|
+      concat "chartData['#{id}'].addColumn('#{table.column_types[col]}', '#{col}');"
     end
     option_str = []
     options.each do |key, val|
       option_str << "#{key}: #{val}"
     end
     concat %Q(
-      chartData['#{id}'].addRows(#{data_to_js(data,column_types)});
+      chartData['#{id}'].addRows(#{data_to_js(table.data,table.column_types)});
       visualizationCharts['#{id}'] = new google.visualization.#{chart.to_s.camelize}(document.getElementById('#{id}'));
       visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str.join(',')}});
     )
