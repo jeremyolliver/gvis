@@ -6,7 +6,7 @@
 # written by Jeremy Olliver
 module GoogleVisualization
   
-  attr_accessor :google_visualisations, :visualisation_packages
+  attr_accessor :google_visualizations, :visualization_packages
   
   #######################################################################
   # Place these method calls inside the <head> tag in your layout file. #
@@ -14,15 +14,15 @@ module GoogleVisualization
   
   # Include the Visualisation API code from google.
   # (Omit this call if you prefer to include the API in your own js package)
-  def include_visualisation_api
+  def include_visualization_api
     %Q(<!--Load the AJAX API--><script type="text/javascript" src="http://www.google.com/jsapi"></script>)
   end
   
-  # This code actually inserts the visualisation data
-  def render_visualisations
-    if @google_visualisations
+  # This code actually inserts the visualization data
+  def render_visualizations
+    if @google_visualizations
       package_list = []
-      @visualisation_packages.each do |p|
+      @visualization_packages.each do |p|
         package_list << "\'#{p.to_s.camelize.downcase}\'"
       end
       concat %Q(
@@ -32,8 +32,8 @@ module GoogleVisualization
           var chartData = {};
           var visualizationCharts = {};
           function drawCharts() { )
-            @google_visualisations.each do |id, vis|
-              generate_visualisation(id, vis.first, vis.second, vis.third)
+            @google_visualizations.each do |id, vis|
+              generate_visualization(id, vis.first, vis.second, vis.third)
             end
       concat("} </script>")
     end
@@ -41,19 +41,19 @@ module GoogleVisualization
   end
   
   ########################################################################
-  # Call this method from the view to insert the visualisation data here #
+  # Call this method from the view to insert the visualization data here #
   ########################################################################
   def visualization(id, chart_type, options = {}, &block)
     init
     chart_type = chart_type.camelize
     options.stringify_keys!
-    @visualisation_packages << chart_type
+    @visualization_packages << chart_type
     table = DataTable.new(options.delete("data"), options.delete("columns"), options)
     if block_given?
       yield table
     end
     html_options = options.delete("html") || {}
-    @google_visualisations.merge!(id => [chart_type, table, options])
+    @google_visualizations.merge!(id => [chart_type, table, options])
     html = ""
     html_options.each do |key, value|
       html += %Q(#{key}="#{value}" )
@@ -64,14 +64,14 @@ module GoogleVisualization
   protected
   
   def init
-    @google_visualisations ||= {}
-    @visualisation_packages ||=[]
+    @google_visualizations ||= {}
+    @visualization_packages ||=[]
   end
   
   ###################################################
   # Internal methods for building the script data   #
   ###################################################
-  def generate_visualisation(id, chart, table, options={})
+  def generate_visualization(id, chart, table, options={})
     # Generate the js chart data
     concat "chartData['#{id}'] = new google.visualization.DataTable();"
     table.columns.each do |col|

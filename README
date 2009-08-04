@@ -19,8 +19,8 @@ end
 # Load the API, and render any graphs by placing these methods inside your layout
 # app/views/layouts/application.html.erb
 <head>
-	<%= include_visualisation_api %>
-	<%= render_visualisations %>
+	<%= include_visualization_api %>
+	<%= render_visualizations %>
 ...
 </head>
 
