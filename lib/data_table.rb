@@ -60,6 +60,7 @@ class DataTable
       ds += rs
       ds += (row == data.last) ? "]" : ","
     end
+    ds
   end
   
   # Class Methods
