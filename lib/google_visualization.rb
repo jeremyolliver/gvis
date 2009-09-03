@@ -58,7 +58,7 @@ module GoogleVisualization
     html_options.each do |key, value|
       html += %Q(#{key}="#{value}" )
     end
-    concat %Q(<div id="#{id}" #{html}><!-- /--></div>), capture(&block).binding
+    concat %Q(<div id="#{id}" #{html}><!-- /--></div>), block.binding
   end
   
   protected
