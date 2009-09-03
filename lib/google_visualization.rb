@@ -25,19 +25,19 @@ module GoogleVisualization
       @visualization_packages.each do |p|
         package_list << "\'#{p.to_s.camelize.downcase}\'"
       end
-      concat %Q(
+      output = %Q(
         <script type="text/javascript">
-          google.load('visualization', '1', {'packages':[#{package_list.join(',')}]});
+          google.load('visualization', '1', {'packages':[#{package_list.uniq.join(',')}]});
           google.setOnLoadCallback(drawCharts);
           var chartData = {};
           var visualizationCharts = {};
           function drawCharts() { )
             @google_visualizations.each do |id, vis|
-              generate_visualization(id, vis.first, vis.second, vis.third)
+              output += generate_visualization(id, vis.first, vis.second, vis.third)
             end
-      concat("} </script>")
+      output += "} </script>"
     end
-    "<!-- Rendered Google Visualisations /-->"
+    output + "<!-- Rendered Google Visualisations /-->"
   end
   
   ########################################################################
@@ -58,7 +58,7 @@ module GoogleVisualization
     html_options.each do |key, value|
       html += %Q(#{key}="#{value}" )
     end
-    concat %Q(<div id="#{id}" #{html}><!-- /--></div>)
+    concat %Q(<div id="#{id}" #{html}><!-- /--></div>), capture(&block).binding
   end
   
   protected
@@ -73,15 +73,15 @@ module GoogleVisualization
   ###################################################
   def generate_visualization(id, chart, table, options={})
     # Generate the js chart data
-    concat "chartData['#{id}'] = new google.visualization.DataTable();"
+    output = "chartData['#{id}'] = new google.visualization.DataTable();"
     table.columns.each do |col|
-      concat "chartData['#{id}'].addColumn('#{table.column_types[col]}', '#{col}');"
+      output += "chartData['#{id}'].addColumn('#{table.column_types[col]}', '#{col}');"
     end
     option_str = []
     options.each do |key, val|
       option_str << "#{key}: #{val}"
     end
-    concat %Q(
+    output += %Q(
       chartData['#{id}'].addRows(#{table.js_format_data});
       visualizationCharts['#{id}'] = new google.visualization.#{chart.to_s.camelize}(document.getElementById('#{id}'));
       visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str.join(',')}});
