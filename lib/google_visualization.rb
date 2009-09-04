@@ -33,7 +33,7 @@ module GoogleVisualization
           var visualizationCharts = {};
           function drawCharts() { )
             @google_visualizations.each do |id, vis|
-              output += generate_visualization(id, vis.first, vis.second, vis.third)
+              output += generate_visualization(id, vis[0], vis[1], vis[2])
             end
       output += "} </script>"
     end
