@@ -55,7 +55,7 @@ class DataTable
           entry.to_json
         end
         rs += safe_val
-        rs += (entry == row.last) ? "]" : ","
+        rs += (index == row.size - 1) ? "]" : ","
       end
       ds += rs
       ds += (row == data.last) ? "]" : ","
