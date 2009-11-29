@@ -36,10 +36,10 @@ module GoogleVisualization
               output += generate_visualization(id, vis[0], vis[1], vis[2])
             end
       output += "} </script>"
+      output + "<!-- Rendered Google Visualisations /-->"
     end
-    output + "<!-- Rendered Google Visualisations /-->"
   end
-  
+
   ########################################################################
   # Call this method from the view to insert the visualization data here #
   ########################################################################
