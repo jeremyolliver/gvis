@@ -48,9 +48,9 @@ class DataTable
       rs = "["
       row.each_with_index do |entry,index|
         safe_val = if @column_types[index] == "date" || entry.is_a?(Date)
-          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month},#{entry.day})"
+          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month-1},#{entry.day})"
         elsif @column_types[index] == "datetime" || entry.is_a?(Time)
-          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month},#{entry.day},#{entry.hour},#{entry.min},#{entry.sec})"
+          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month-1},#{entry.day},#{entry.hour},#{entry.min},#{entry.sec})"
         else
           entry.to_json
         end
