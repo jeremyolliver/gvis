@@ -1,2 +1,2 @@
 # Uninstall hook code here
-puts "remeber to remove 'include GoogleVisualisation' from ApplicationHelper"
+puts "remeber to remove 'include GoogleVisualization' from ApplicationHelper"
