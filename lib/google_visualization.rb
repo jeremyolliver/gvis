@@ -15,7 +15,7 @@ module GoogleVisualization
   # Include the Visualization API code from google.
   # (Omit this call if you prefer to include the API in your own js package)
   def include_visualization_api
-    %Q(<!--Load the AJAX API--><script type="text/javascript" src="http://www.google.com/jsapi"></script>)
+    raw(%Q(<!--Load the AJAX API--><script type="text/javascript" src="http://www.google.com/jsapi"></script>))
   end
   
   # This code actually inserts the visualization data
@@ -36,9 +36,9 @@ module GoogleVisualization
               output += generate_visualization(id, vis[0], vis[1], vis[2])
             end
       output += "} </script>"
-      output + "<!-- Rendered Google Visualizations /-->"
+      raw(output + "<!-- Rendered Google Visualizations /-->")
     else
-      "<!-- No graphs on this page /-->"
+      raw("<!-- No graphs on this page /-->")
     end
   end
 
