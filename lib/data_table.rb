@@ -19,15 +19,18 @@ class DataTable
     @data = data || []
   end
   
+  # Registers each column explicitly, with data type, and a name associated
   def register_column(type, name, options = {})
     @columns << name.to_s
     @column_types.merge!(name.to_s => type.to_s)
   end
   
+  # Adds a single row to the table
   def add_row(row)
     @data << row
   end
   
+  # Adds multiple rows (2D array) to the table
   def add_rows(rows)
     @data += rows
   end
@@ -42,45 +45,32 @@ class DataTable
     end
   end
   
+  ###################################################################################
+  # Format the ruby arrays into JS                                                  #
+  # Builds up a string representing a JS Array with JS escaped and formatted values #
+  ###################################################################################
   def js_format_data
-    ds = "["
+    formatted_rows = []
     @data.each do |row|
-      rs = "["
+      values = []
       row.each_with_index do |entry,index|
+        # Format/escape individual values for javascript, checking column types, and the ruby value as a failsafe
         safe_val = if @column_types[index] == "date" || entry.is_a?(Date)
-          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month-1},#{entry.day})"
+          # Format a date object as a javascript date
+          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month - 1},#{entry.day})"
         elsif @column_types[index] == "datetime" || entry.is_a?(Time)
-          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month-1},#{entry.day},#{entry.hour},#{entry.min},#{entry.sec})"
+          # Format a Time (datetime) as a javascript date object down to seconds
+          entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month - 1},#{entry.day},#{entry.hour},#{entry.min},#{entry.sec})"
         else
+          # Non date/time values can be JS escaped/formatted safely with # to_json
           entry.to_json
         end
-        rs += safe_val
-        rs += (index == row.size - 1) ? "]" : ","
+        values << safe_val
       end
-      ds += rs
-      ds += (row == data.last) ? "]" : ","
+      rowstring = "[#{values.join(",")}]"
+      formatted_rows << rowstring
     end
-    ds
-  end
-  
-  # Class Methods
-  class << self
-    
-    def determine_type(val)
-      case val.class
-      when String
-        "string"
-      when Fixnum
-        "number"
-      when Float
-        "number"
-      when Date
-        "date"
-      when Time
-        "datetime"
-      end
-    end
-    
+    "[#{formatted_rows.join(',')}]"
   end
   
 end
