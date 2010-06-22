@@ -14,7 +14,7 @@ Rails 3:
 rails plugin install git://github.com/jeremyolliver/gvis.git
 
 Rails 2.X:
-script/plugin install git://github.com/jeremyolliver/gvis.git version_1.0
+script/plugin install git://github.com/jeremyolliver/gvis.git -r version_1.0
 
 # Include the GoogleVisualization module in app/helpers/application_helper.rb
 module ApplicationHelper
