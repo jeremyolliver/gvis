@@ -90,15 +90,33 @@ module GoogleVisualization
     table.columns.each do |col|
       output += "chartData['#{id}'].addColumn('#{table.column_types[col]}', '#{col}');"
     end
-    option_str = []
-    options.each do |key, val|
-      option_str << "#{key}: #{val}"
-    end
+    option_str = make_opts_string(options)
+    
     output += %Q(
       chartData['#{id}'].addRows(#{table.js_format_data});
       visualizationCharts['#{id}'] = new google.visualization.#{chart.to_s.camelize}(document.getElementById('#{id}'));
-      visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str.join(',')}});
+      visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str}});
     )
+  end
+
+  # parse options into an array of key-value pairs
+  #
+  def make_opts_string(opts)
+    option_str = []
+    opts.each do |key, val|
+      str = "#{key}: "
+      if val.kind_of? Hash
+        str += "{" + make_opts_string(val) + "}"
+      elsif val.kind_of? Array
+        str += "[ " + val.collect { |v| "'#{v}'" }.join(", ") + " ]"
+      else
+        str += (val.kind_of?(String) ? "'#{val}'" : val.to_s)
+      end
+
+      option_str << str
+    end
+
+    return option_str.join(',')
   end
   
 end
