@@ -15,7 +15,7 @@ module GoogleVisualization
   # Include the Visualization API code from google.
   # (Omit this call if you prefer to include the API in your own js package)
   def include_visualization_api
-    %Q(<!--Load the AJAX API--><script type="text/javascript" src="http://www.google.com/jsapi"></script>)
+    javascript_include_tag("http://www.google.com/jsapi")
   end
   
   # This code actually inserts the visualization data
@@ -36,9 +36,9 @@ module GoogleVisualization
               output += generate_visualization(id, vis[0], vis[1], vis[2])
             end
       output += "} </script>"
-      output + "<!-- Rendered Google Visualizations /-->"
+      raw(output + "<!-- Rendered Google Visualizations /-->")
     else
-      "<!-- No graphs on this page /-->"
+      raw("<!-- No graphs on this page /-->")
     end
   end
 
@@ -69,7 +69,7 @@ module GoogleVisualization
     html_options.each do |key, value|
       html += %Q(#{key}="#{value}" )
     end
-    concat %Q(<div id="#{id}" #{html}><!-- /--></div>), block.binding
+    concat raw(%Q(<div id="#{id}" #{html}><!-- /--></div>))
     nil
   end
   
@@ -90,15 +90,33 @@ module GoogleVisualization
     table.columns.each do |col|
       output += "chartData['#{id}'].addColumn('#{table.column_types[col]}', '#{col}');"
     end
-    option_str = []
-    options.each do |key, val|
-      option_str << "#{key}: #{val}"
-    end
+    option_str = make_opts_string(options)
+    
     output += %Q(
       chartData['#{id}'].addRows(#{table.js_format_data});
       visualizationCharts['#{id}'] = new google.visualization.#{chart.to_s.camelize}(document.getElementById('#{id}'));
-      visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str.join(',')}});
+      visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str}});
     )
+  end
+
+  # parse options into an array of key-value pairs
+  #
+  def make_opts_string(opts)
+    option_str = []
+    opts.each do |key, val|
+      str = "#{key}: "
+      if val.kind_of? Hash
+        str += "{" + make_opts_string(val) + "}"
+      elsif val.kind_of? Array
+        str += "[ " + val.collect { |v| "'#{v}'" }.join(", ") + " ]"
+      else
+        str += (val.kind_of?(String) ? "'#{val}'" : val.to_s)
+      end
+
+      option_str << str
+    end
+
+    return option_str.join(',')
   end
   
 end

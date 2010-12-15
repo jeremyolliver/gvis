@@ -9,8 +9,6 @@ Ruby wrapper for easily loading the Google Visualization API, and simple generat
 Installation
 ============
 
-script/plugin install git://github.com/jeremyolliver/gvis.git
-
 # Include the GoogleVisualization module in app/helpers/application_helper.rb
 module ApplicationHelper
   
@@ -21,8 +19,8 @@ end
 # Load the API, and render any graphs by placing these methods inside your layout
 # app/views/layouts/application.html.erb
 <head>
-	<%= include_visualisation_api %>
-	<%= render_visualisations %>
+	<%= include_visualization_api %>
+	<%= render_visualizations %>
 ...
 </head>
 
