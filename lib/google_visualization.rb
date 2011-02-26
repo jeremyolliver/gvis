@@ -36,9 +36,9 @@ module GoogleVisualization
               output += generate_visualization(id, vis[0], vis[1], vis[2])
             end
       output += "} </script>"
-      raw(output + "<!-- Rendered Google Visualizations /-->")
+      output + "<!-- Rendered Google Visualizations /-->"
     else
-      raw("<!-- No graphs on this page /-->")
+      "<!-- No graphs on this page /-->"
     end
   end
 
