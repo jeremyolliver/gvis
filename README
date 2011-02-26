@@ -2,8 +2,10 @@ Gvis
 ====
 
 Rails plugin that provides a Ruby wrapper for easily loading the Google Visualization API, and simple generation of the javascript required to plot the graphs
+For a full list of the graphs provided by google's visualization api see: http://code.google.com/apis/visualization/documentation/gallery.html
+For documentation on how to use each graph type see: http://code.google.com/apis/visualization/documentation/
 
-version 1.1 - Rails 3
+version 2.0 - Rails 3
 version 1.0 - Rails 2.X
 
 
