@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class GvisTest < ActiveSupport::TestCase
+class GvisTest < Test::Unit::TestCase
   # Replace this with your real tests.
   test "the truth" do
     assert true
