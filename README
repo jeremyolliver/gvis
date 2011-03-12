@@ -5,18 +5,20 @@ Rails plugin that provides a Ruby wrapper for easily loading the Google Visualiz
 For a full list of the graphs provided by google's visualization api see: http://code.google.com/apis/visualization/documentation/gallery.html
 For documentation on how to use each graph type see: http://code.google.com/apis/visualization/documentation/
 
-version 2.0 - Rails 3
-version 1.0 - Rails 2.X
+version 2.X - Rails 3.X
+version 1.X - Rails 2.X
 
 
 Installation
 ============
 
 Rails 3:
-rails plugin install git://github.com/jeremyolliver/gvis.git
+# Gemfile
+gem 'gvis', '>= 2.0.0'
 
 Rails 2.X:
-script/plugin install git://github.com/jeremyolliver/gvis.git -r version_1.0
+# config/environment.rb
+config.gem 'gvis', :version => '< 2.0.0'
 
 # Include the GoogleVisualization module in app/helpers/application_helper.rb
 module ApplicationHelper
@@ -40,14 +42,14 @@ Example
 # Render desired graphs in the view
 # index.html.erb
 <% visualization "my_chart", "MotionChart", :width => 600, :height => 400, :html => {:class => "graph_chart"} do |chart| %>
-	<%# Add the columns that the graph will have
+	<%# Add the columns that the graph will have %>
 	<% chart.string "Fruit" %>
 	<% chart.date "Date" %>
 	<% chart.number "Sales" %>
 	<% chart.number "Expenses" %>
 	<% chart.string "Location" %>
 	
-	<%# Add the data
+	<%# Add the data %>
 	<% chart.add_rows([
 			["Apples", Date.new(1998,1,1), 1000,300,'East'],
 			["Oranges", Date.new(1998,1,1), 950,200,'West'],
