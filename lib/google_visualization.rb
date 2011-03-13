@@ -1,9 +1,9 @@
-# Provides calls for simplifying the loading and use of the Google Visualization API
+# view helper for using the Google Visualization API
 #
 # For use with rails, include this Module in ApplicationHelper
 # See the Readme for usage details
 #
-# written by Jeremy Olliver
+# @author Jeremy Olliver
 module GoogleVisualization
   
   attr_accessor :google_visualizations, :visualization_packages
@@ -38,7 +38,7 @@ module GoogleVisualization
       output += "} </script>"
       raw(output + "<!-- Rendered Google Visualizations /-->")
     else
-      raw("<!-- No graphs on this page /-->")
+      raw("<!-- No graphs on this page /-->") if debugging?
     end
   end
 
@@ -117,6 +117,16 @@ module GoogleVisualization
     end
 
     return option_str.join(',')
+  end
+  
+  private
+  
+  def debugging?
+    debugging = false
+    if defined?(Rails) && Rails.responsd_to?(:env)
+      debugging = true if ["development", "test"].include? Rails.env
+    end
+    debugging
   end
   
 end
