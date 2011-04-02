@@ -17,8 +17,8 @@ module Gvis
     # @param [Hash] options optional param of configuration options for the google.visualization.DataTable javascript object
     def initialize(data = nil, columns = [], options = {})
       @table_columns, @column_types = [], {}
-      unless columns.nil? || columns.empty?
-        columns.each do |type, name|
+      if columns.any?
+        columns.each do |name, type|
           register_column(type, name)
         end
       end
@@ -60,11 +60,9 @@ module Gvis
     # Handle the Column definition methods (#string, #number, #date, #datetime)
     # This allows columns to be defined one at a time, with a dsl similar to AR migrations
     # e.g. table.string "name"
-    def method_missing(method, *arguments)
-      if COLUMN_TYPES.include?(method.to_s)
-        register_column(method, *arguments)
-      else
-        raise NoMethodError.new(method)
+    COLUMN_TYPES.each do |col_type|
+      define_method(col_type) do |args|
+        register_column(col_type, *args)
       end
     end
 
@@ -104,7 +102,7 @@ module Gvis
     # @param [String] name the column name that will be used as a label on the graph
     def register_column(type, name)
       type = type.to_s.downcase
-      raise ArgumentError.new("invalid column type #{type}, permitted types are #{COLUMN_TYPES.to_sentence}") unless COLUMN_TYPES.include?(type)
+      raise ArgumentError.new("invalid column type #{type}, permitted types are #{COLUMN_TYPES.join(', ')}") unless COLUMN_TYPES.include?(type)
       @table_columns << name.to_s
       @column_types.merge!(name.to_s => type)
     end
