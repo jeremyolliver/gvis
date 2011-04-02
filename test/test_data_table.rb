@@ -6,12 +6,12 @@ class TestDataTable < MiniTest::Unit::TestCase
     @table = Gvis::DataTable.new
   end
 
-  def test_attributes_and_constants
+  def test_attributes_methods_and_constants
     assert defined?(Gvis::DataTable::COLUMN_TYPES)
     assert_equal ["string", "number", "date", "datetime"], Gvis::DataTable::COLUMN_TYPES
     defined_attributes = [:data, :table_columns, :column_types]
     defined_attributes.each do |a|
-      assert @table.respond_to?(a), "DataTable should respond have attribute #{a} defined"
+      assert @table.respond_to?(a), "DataTable should have attribute #{a} defined"
     end
     methods = [:columns, :columns=, :add_row, :add_rows, :format_data] + Gvis::DataTable::COLUMN_TYPES
     methods.each do |meth|

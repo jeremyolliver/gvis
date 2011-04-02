@@ -8,7 +8,7 @@ For documentation on how to use each graph type see google's [API documentation]
 Compatiblity
 ------------
 
-gvis version 2.x+ - Rails 3.x compatible (And rails 2.x using rails_xss)
+gvis version 2.x - Rails 3.x compatible (And rails 2.x using rails_xss)
 
 gvis version 1.x - Rails 2.x compatible
 
