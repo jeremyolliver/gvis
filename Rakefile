@@ -1,23 +1,19 @@
-require 'rake'
+require 'bundler'
+Bundler::GemHelper.install_tasks
+
 require 'rake/testtask'
-require 'rake/rdoctask'
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = true
+end
 
-desc 'Default: run unit tests.'
+require 'rcov/rcovtask'
+Rcov::RcovTask.new do |test|
+  test.rcov_opts << '--exclude /gems/,/Library/,/usr/,spec,lib/tasks' # exclude external gems/libraries
+  test.libs << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = true
+end
+
 task :default => :test
-
-desc 'Test the gvis plugin.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.libs << 'test'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
-end
-
-desc 'Generate documentation for the gvis plugin.'
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Gvis'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
