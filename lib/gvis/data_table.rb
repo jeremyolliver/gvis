@@ -17,7 +17,7 @@ module Gvis
     # @param [Hash] options optional param of configuration options for the google.visualization.DataTable javascript object
     def initialize(data = nil, columns = [], options = {})
       @table_columns, @column_types = [], {}
-      if columns.any?
+      if columns && columns.any?
         columns.each do |name, type|
           register_column(type, name)
         end

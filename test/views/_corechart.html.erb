@@ -1,0 +1,11 @@
+<%
+%w(AreaChart BarChart ColumnChart LineChart PieChart).each do |chart_type|
+  visualization("#{chart_type}_id", "LineChart") do |chart|
+    chart.columns = [["Name", "String"], ["age", "number"]]
+    chart.add_rows([
+      ["Jeremy", 23],
+      ["Ben", 24]
+    ])
+  end
+end
+%>

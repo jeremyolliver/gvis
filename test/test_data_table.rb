@@ -1,7 +1,7 @@
 require 'helper'
 
 class TestDataTable < MiniTest::Unit::TestCase
-  
+
   def setup
     @table = Gvis::DataTable.new
   end

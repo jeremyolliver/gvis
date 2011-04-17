@@ -22,9 +22,10 @@ module GoogleVisualization
   # @return [String] a javascript tag that contains the generated javascript to render the graphs
   def render_visualizations
     if @google_visualizations
-      package_list = []
-      @visualization_packages.uniq.each do |p|
-        package_list << "\'#{p.to_s.camelize.downcase}\'"
+      package_list = @visualization_packages.uniq.collect do |p|
+        package = p.to_s.camelize.downcase
+        package = "corechart" if ["areachart", "barchart", "columnchart", "linechart", "piechart"].include?(package)
+        "\'#{package}\'"
       end
       output = %Q(
         <script type="text/javascript">
@@ -59,7 +60,7 @@ module GoogleVisualization
     @visualization_packages << chart_type # Add the chart type to the packages needed to be loaded
 
     # Initialize the data table (with hashed options), and pass it the block for cleaner adding of attributes within the block
-    table = DataTable.new(options.delete("data"), options.delete("columns"), options)
+    table = Gvis::DataTable.new(options.delete("data"), options.delete("columns"), options)
     if block_given?
       yield table
     end
