@@ -51,12 +51,24 @@ class TestDataTable < MiniTest::Unit::TestCase
     assert_equal [["Jeremy", "Olliver", 23], ["Optimus", "Prime", 1000], ["Mega", "Tron", 999]], @table.data
   end
 
-  def test_formatting_data
+  def test_render_data
     @table.columns = [["Name", "String"], ["age", "number"], ["dob", "date"], ["now", "datetime"]]
     now = Time.utc(2011,1,23,11,30,4)
     @table.add_rows([["Jeremy Olliver", 23, Date.new(2011,1,1), now], ["Optimus Prime", 1000, Date.new(1980,2,23), now], ["'The MegaTron'", 999, Date.new(1981,1,1), now]])
 
-    assert_equal %q([["Jeremy Olliver", 23, new Date (2011,0,1), new Date (2011,0,23,11,30,4)], ["Optimus Prime", 1000, new Date (1980,1,23), new Date (2011,0,23,11,30,4)], ["'The MegaTron'", 999, new Date (1981,0,1), new Date (2011,0,23,11,30,4)]]), @table.format_data
+    assert_equal %q([["Jeremy Olliver", 23, new Date (2011,0,1), new Date (2011,0,23,11,30,4)], ["Optimus Prime", 1000, new Date (1980,1,23), new Date (2011,0,23,11,30,4)], ["'The MegaTron'", 999, new Date (1981,0,1), new Date (2011,0,23,11,30,4)]]), @table.render_data
+  end
+  
+  def test_adding_generic_formatting_options
+    @table.string "Name"
+    @table.number "age"
+    @table.number "favorite number"
+    @table.date "dob"
+
+    @table.format :ArrowFormat => {:base => 1}
+
+    assert_equal 1, @table.formatters.size
+    assert_match /blah blah/, @table.format_data
   end
 
 end

@@ -10,7 +10,7 @@ module Gvis
 
     COLUMN_TYPES = ["string", "number", "date", "datetime"]
 
-    attr_accessor :data, :table_columns, :column_types
+    attr_accessor :data, :table_columns, :column_types, :formatters
 
     # @param [Array] data optional param that may contain a 2D Array for specifying the data upon initialization
     # @param [Array] columns optional param for specifying the column structure upon initialization
@@ -69,7 +69,7 @@ module Gvis
     # Outputs the data within this table as a javascript array ready for use by google.visualization.DataTable
     # This is where conversions of ruby date objects to javascript Date objects and escaping strings, and formatting options is done
     # @return [String] a javascript array with the first row defining the table, and subsequent rows holding the table's data
-    def format_data
+    def render_data
       formatted_rows = []
       @data.each do |row|
         values = []
@@ -95,17 +95,33 @@ module Gvis
     alias :js_format_data :format_data # For backwards compatibility, just in case
     alias :to_s :format_data
 
+    def render_formatters(data_var)
+      @formatters.collect do |f|
+        f.render(data_var, table_columns)
+      end
+    end
+
+    # Apply a formatter to all applicable column types
+    # @param [Hash] key should be the formatter name, values are the options to pass through to the formatter
+    # for ColorFormat which uses method calls instead of constructor arguments, pass an array of strings for the methods to call on the formatter
+    def format(formatters)
+      @formatters ||= []
+      formatters.each do |formatter_name, options|
+        @formatters << Gvis::Formatter.new(formatter_name, :all, options)
+      end
+    end
+
     private
 
     # Registers each column explicitly, with data type, and a name associated
     # @param [String] type the type of data column being registered, valid input here are entries from DataTable::COLUMN_TYPES
     # @param [String] name the column name that will be used as a label on the graph
-    def register_column(type, name)
+    def register_column(type, name, formatter = nil)
       type = type.to_s.downcase
       raise ArgumentError.new("invalid column type #{type}, permitted types are #{COLUMN_TYPES.join(', ')}") unless COLUMN_TYPES.include?(type)
       @table_columns << name.to_s
       @column_types.merge!(name.to_s => type)
     end
-  
+
   end
 end

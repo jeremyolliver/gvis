@@ -97,7 +97,8 @@ module GoogleVisualization
     option_str = parse_options(options)
 
     output += %Q(
-      chartData['#{id}'].addRows(#{table.format_data});
+      chartData['#{id}'].addRows(#{table.render_data});
+      #{table.render_formatters('chartData[' + id + ']')}
       visualizationCharts['#{id}'] = new google.visualization.#{chart_type.to_s.camelize}(document.getElementById('#{id}'));
       visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str}});
     )

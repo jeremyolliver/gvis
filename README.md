@@ -67,5 +67,31 @@ Render desired graphs in the view like this:
 		]) %>
 	<% end %>
 
+Example with formatting
+=======================
+
+	<% visualization "my_formatted_chart", "MotionChart", :width => 600, :height => 400, :html => {:class => "graph_chart"} do |chart| %>
+		<%# Add the columns that the graph will have %>
+		<% chart.string "Fruit" %>
+		<% chart.date "Date", :DateFormat => {:timeZone => +12} %>
+		<%# Declaring a formatter as an option on a column will apply the formatter to only that column %>
+		<% chart.number "Sales", :ArrowFormat => {:base => 0} %>
+		<% chart.number "Expenses" %>
+		<% chart.string "Location" %>
+
+		<%# chart.format applies the formatter to all applicable column types, (number columns in the case of ColorFormat) %>
+		<% chart.format :ColorFormat => ['addRange(null, 0, 'black', 'red')', 'addGradientRange(0, null, 'black', 'green', 'white')'] %>
+
+		<%# Add the data %>
+		<% chart.add_rows([
+			["Apples", Date.new(1998,1,1), 1000,300,'East'],
+			["Oranges", Date.new(1998,1,1), 950,200,'West'],
+			["Bananas", Date.new(1998,1,1), 300,250,'West'],
+			["Apples", Date.new(1998,2,1), 1200,400,'East'],
+			["Oranges", Date.new(1998,2,1), 950,150,'West'],
+			["Bananas", Date.new(1998,2,1), 788,617,'West']
+		]) %>
+	<% end %>
+
 
 Copyright (c) 2009 [Jeremy Olliver], released under the MIT license
