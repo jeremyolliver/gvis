@@ -130,7 +130,7 @@ module GoogleVisualization
   # @return [boolean]
   def debugging?
     debugging = ENV["DEBUG"]
-    if defined?(Rails) && Rails.responds_to?(:env)
+    if defined?(Rails) && Rails.respond_to?(:env)
       debugging = true if ["development", "test"].include? Rails.env
     end
     debugging
