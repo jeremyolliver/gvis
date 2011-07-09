@@ -13,9 +13,9 @@ module Gvis
     }
     attr_accessor :formatter_name, :column, :options
 
-    def initialize(formatter_name, column = :all, options = {})
+    def initialize(formatter_name, column, options = {})
       @formatter_name = formatter_name.to_sym
-      @column = column
+      @column = column || :all
       @options = options
     end
 

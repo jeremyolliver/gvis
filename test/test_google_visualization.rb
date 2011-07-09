@@ -54,6 +54,7 @@ class TestGoogleVisualization < MiniTest::Unit::TestCase
 
   def test_motion_chart
     output = @view.render("test/views/_motionchart.html.erb")
+    puts output
     assert_match("'packages':['motionchart']", output, "the motionchart package should have been loaded")
     assert_match("<div id=\"my_chart\"", output, "The graph div should exist on the page")
   end

@@ -1,10 +1,12 @@
 <% visualization "my_chart", "MotionChart", :width => 600, :height => 400, :html => {:class => "graph_chart"} do |chart| %>
     <%# Add the columns that the graph will have %>
     <% chart.string "Fruit" %>
-    <% chart.date "Date" %>
+    <% chart.date "Date", :DateFormat => {:timeZone => +12} %>
     <% chart.number "Sales" %>
     <% chart.number "Expenses" %>
     <% chart.string "Location" %>
+
+    <% chart.format :ArrowFormat => {:base => 0} %>
 
     <%# Add the data %>
     <% chart.add_rows([

@@ -16,10 +16,12 @@ module Gvis
     # @param [Array] columns optional param for specifying the column structure upon initialization
     # @param [Hash] options optional param of configuration options for the google.visualization.DataTable javascript object
     def initialize(data = nil, columns = [], options = {})
-      @table_columns, @column_types = [], {}
+      @table_columns = []
+      @column_types = {}
+      @formatters = []
       if columns && columns.any?
-        columns.each do |name, type|
-          register_column(type, name)
+        columns.each do |name, type, options|
+          register_column(type, name, options)
         end
       end
       @data = data || []
@@ -61,7 +63,7 @@ module Gvis
     # This allows columns to be defined one at a time, with a dsl similar to AR migrations
     # e.g. table.string "name"
     COLUMN_TYPES.each do |col_type|
-      define_method(col_type) do |args|
+      define_method(col_type) do |*args|
         register_column(col_type, *args)
       end
     end
@@ -92,13 +94,14 @@ module Gvis
       end
       "[#{formatted_rows.join(', ')}]"
     end
+    alias :format_data :render_data
     alias :js_format_data :format_data # For backwards compatibility, just in case
     alias :to_s :format_data
 
     def render_formatters(data_var)
       @formatters.collect do |f|
         f.render(data_var, table_columns)
-      end
+      end.to_s
     end
 
     # Apply a formatter to all applicable column types
@@ -116,11 +119,16 @@ module Gvis
     # Registers each column explicitly, with data type, and a name associated
     # @param [String] type the type of data column being registered, valid input here are entries from DataTable::COLUMN_TYPES
     # @param [String] name the column name that will be used as a label on the graph
-    def register_column(type, name, formatter = nil)
+    def register_column(type, name, formatters = {})
       type = type.to_s.downcase
       raise ArgumentError.new("invalid column type #{type}, permitted types are #{COLUMN_TYPES.join(', ')}") unless COLUMN_TYPES.include?(type)
       @table_columns << name.to_s
       @column_types.merge!(name.to_s => type)
+      if formatters
+        formatters.each do |formatter_name, formatter_options|
+          @formatters << Gvis::Formatter.new(formatter_name, name, formatter_options)
+        end
+      end
     end
 
   end

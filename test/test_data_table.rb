@@ -68,7 +68,15 @@ class TestDataTable < MiniTest::Unit::TestCase
     @table.format :ArrowFormat => {:base => 1}
 
     assert_equal 1, @table.formatters.size
-    assert_match /blah blah/, @table.format_data
+    assert_match /var formatter = new google.visualization.ArrowFormat\(\{\"base\":1\}\);/, @table.render_formatters('some_chart')
+  end
+  
+  def test_column_specific_formatters
+    @table.date "DoB", :DateFormat => {:timeZone => +12}
+
+    assert_equal 1, @table.columns.size
+    assert_equal 1, @table.formatters.size
+    assert_equal "DoB", @table.formatters.first.column
   end
 
 end
