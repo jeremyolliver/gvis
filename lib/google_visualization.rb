@@ -24,7 +24,7 @@ module GoogleVisualization
     if @google_visualizations
       package_list = @visualization_packages.uniq.collect do |p|
         package = p.to_s.camelize.downcase
-        package = "corechart" if ["areachart", "barchart", "columnchart", "linechart", "piechart"].include?(package)
+        package = "corechart" if ["areachart", "barchart", "columnchart", "linechart", "piechart", "combochart"].include?(package)
         "\'#{package}\'"
       end
       output = %Q(
