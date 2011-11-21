@@ -1,0 +1,15 @@
+<% visualization "my_chart", "AnnotatedTimeline", :width => 600, :height => 400, :thickness => 11, :displayZoomButtons => true, :timeofdayTest => Time.utc(2000,"jan",1,1,2,3,4), :nullTest => nil, :zoomStartTime => Date.new(2011,01,01), :html => {:style => 'width:600px; height:300px', :class => "graph_chart"} do |chart| %>
+    <%# Add the columns that the graph will have %>
+    <% chart.date "Date" %>
+    <% chart.number "Sales" %>
+
+    <%# Add the data %>
+    <% chart.add_rows([
+        [Date.new(1998,1,1), 1000],
+        [Date.new(1998,1,1), 950],
+        [Date.new(1998,1,1), 300],
+        [Date.new(1998,2,1), 1200],
+        [Date.new(1998,2,1), 950],
+        [Date.new(1998,2,1), 788]
+    ]) %>
+<% end %>

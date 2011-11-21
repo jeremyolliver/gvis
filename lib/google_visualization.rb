@@ -114,7 +114,7 @@ module GoogleVisualization
       elsif val.kind_of? Array
         str += "[ " + val.collect { |v| "'#{v}'" }.join(", ") + " ]"
       else
-        str += (val.kind_of?(String) ? "'#{val}'" : val.to_s)
+        str += Gvis::DataCell.new(val).to_js
       end
       str
     end.join(',')

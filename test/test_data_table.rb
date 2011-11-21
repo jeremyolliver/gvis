@@ -8,7 +8,7 @@ class TestDataTable < MiniTest::Unit::TestCase
 
   def test_attributes_methods_and_constants
     assert defined?(Gvis::DataTable::COLUMN_TYPES)
-    assert_equal ["string", "number", "date", "datetime"], Gvis::DataTable::COLUMN_TYPES
+    assert_equal ["string", "number", "date", "datetime", "timeofday"], Gvis::DataTable::COLUMN_TYPES
     defined_attributes = [:data, :table_columns, :column_types]
     defined_attributes.each do |a|
       assert @table.respond_to?(a), "DataTable should have attribute #{a} defined"
@@ -52,11 +52,12 @@ class TestDataTable < MiniTest::Unit::TestCase
   end
 
   def test_formatting_data
-    @table.columns = [["Name", "String"], ["age", "number"], ["dob", "date"], ["now", "datetime"]]
-    now = Time.utc(2011,1,23,11,30,4)
-    @table.add_rows([["Jeremy Olliver", 23, Date.new(2011,1,1), now], ["Optimus Prime", 1000, Date.new(1980,2,23), now], ["'The MegaTron'", 999, Date.new(1981,1,1), now]])
+    @table.columns = [["Name", "String"], ["age", "number"], ["dob", "date"], ["now", "datetime"], ["time", "timeofday"]]
+    now_datetime = DateTime.new(2011,1,23,11,30,4)
+    now_time = Time.utc(2011,01,23,02,45,43,21)
+    @table.add_rows([["Jeremy Olliver", 23, Date.new(2011,1,1), now_datetime, now_time], ["Optimus Prime", 1000, Date.new(1980,2,23), now_datetime, now_time], ["'The MegaTron'", 999, Date.new(1981,1,1), now_datetime, now_time]])
 
-    assert_equal %q([["Jeremy Olliver", 23, new Date (2011,0,1), new Date (2011,0,23,11,30,4)], ["Optimus Prime", 1000, new Date (1980,1,23), new Date (2011,0,23,11,30,4)], ["'The MegaTron'", 999, new Date (1981,0,1), new Date (2011,0,23,11,30,4)]]), @table.format_data
+    assert_equal %q([["Jeremy Olliver", 23, new Date (2011,0,1), new Date (2011,0,23,11,30,4), [2,45,43,21]], ["Optimus Prime", 1000, new Date (1980,1,23), new Date (2011,0,23,11,30,4), [2,45,43,21]], ["'The MegaTron'", 999, new Date (1981,0,1), new Date (2011,0,23,11,30,4), [2,45,43,21]]]), @table.format_data
   end
 
 end

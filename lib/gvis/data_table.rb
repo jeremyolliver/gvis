@@ -8,7 +8,7 @@ module Gvis
 
     require 'json'
 
-    COLUMN_TYPES = ["string", "number", "date", "datetime"]
+    COLUMN_TYPES = ["string", "number", "date", "datetime", "timeofday"]
 
     attr_accessor :data, :table_columns, :column_types
 
@@ -74,18 +74,7 @@ module Gvis
       @data.each do |row|
         values = []
         row.each_with_index do |entry,index|
-          # Format/escape individual values for javascript, checking column types, and the ruby value as a failsafe
-          safe_val = if @column_types[index] == "date" || entry.is_a?(Date)
-            # Format a date object as a javascript date
-            entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month - 1},#{entry.day})"
-          elsif @column_types[index] == "datetime" || entry.is_a?(Time)
-            # Format a Time (datetime) as a javascript date object down to seconds
-            entry.is_a?(String) ? entry : "new Date (#{entry.year},#{entry.month - 1},#{entry.day},#{entry.hour},#{entry.min},#{entry.sec})"
-          else
-            # Non date/time values can be JS escaped/formatted safely with # to_json
-            entry.to_json
-          end
-          values << safe_val
+          values << Gvis::DataCell.new(entry, @column_types.to_a[index][1]).to_js
         end
         rowstring = "[#{values.join(", ")}]"
         formatted_rows << rowstring
