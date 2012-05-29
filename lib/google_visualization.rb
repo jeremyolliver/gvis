@@ -14,7 +14,7 @@ module GoogleVisualization
   # Include the Visualization API code from google.
   # (Omit this call if you prefer to include the API in your own js package)
   def include_visualization_api
-    javascript_include_tag("http://www.google.com/jsapi")
+    javascript_include_tag("//www.google.com/jsapi")
   end
 
   # Call this method from the within the head tag (or alternately just before the closing body tag)
