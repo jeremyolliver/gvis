@@ -90,16 +90,16 @@ module GoogleVisualization
   # @return [String] javascript that creates the chart, and adds it to the window variable
   def generate_visualization(id, chart_type, table, options={})
     # Generate the js chart data
-    output = "chartData['#{id}'] = new google.visualization.DataTable();"
+    output = "chartData['#{escape_id(id)}'] = new google.visualization.DataTable();"
     table.columns.each do |col|
-      output += "chartData['#{id}'].addColumn('#{table.column_types[col]}', '#{col}');"
+      output += "chartData['#{escape_id(id)}'].addColumn('#{table.column_types[col]}', '#{col}');"
     end
     option_str = parse_options(options)
 
     output += %Q(
-      chartData['#{id}'].addRows(#{table.format_data});
-      visualizationCharts['#{id}'] = new google.visualization.#{chart_type.to_s.camelize}(document.getElementById('#{id}'));
-      visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str}});
+      chartData['#{escape_id(id)}'].addRows(#{table.format_data});
+      visualizationCharts['#{escape_id(id)}'] = new google.visualization.#{chart_type.to_s.camelize}(document.getElementById('#{id}'));
+      visualizationCharts['#{escape_id(id)}'].draw(chartData['#{id}'], {#{option_str}});
     )
   end
 
@@ -134,6 +134,12 @@ module GoogleVisualization
       debugging = true if ["development", "test"].include? Rails.env
     end
     debugging
+  end
+
+  def escape_id(id)
+    if id
+      id.gsub(/'/, /\\'/)
+    end
   end
 
 end
