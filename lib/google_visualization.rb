@@ -138,7 +138,7 @@ module GoogleVisualization
 
   def escape(s)
     if s
-      s.gsub(/'/, "\\\\'")
+      s.gsub(/'/, "\\'")
     end
   end
 
