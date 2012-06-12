@@ -90,16 +90,16 @@ module GoogleVisualization
   # @return [String] javascript that creates the chart, and adds it to the window variable
   def generate_visualization(id, chart_type, table, options={})
     # Generate the js chart data
-    output = "chartData['#{escape_id(id)}'] = new google.visualization.DataTable();"
+    output = "chartData['#{escape(id)}'] = new google.visualization.DataTable();"
     table.columns.each do |col|
-      output += "chartData['#{escape_id(id)}'].addColumn('#{table.column_types[col]}', '#{col}');"
+      output += "chartData['#{escape(id)}'].addColumn('#{escape(table.column_types[col])}', '#{escape(col)}');"
     end
     option_str = parse_options(options)
 
     output += %Q(
-      chartData['#{escape_id(id)}'].addRows(#{table.format_data});
-      visualizationCharts['#{escape_id(id)}'] = new google.visualization.#{chart_type.to_s.camelize}(document.getElementById('#{id}'));
-      visualizationCharts['#{escape_id(id)}'].draw(chartData['#{id}'], {#{option_str}});
+      chartData['#{escape(id)}'].addRows(#{table.format_data});
+      visualizationCharts['#{escape(id)}'] = new google.visualization.#{chart_type.to_s.camelize}(document.getElementById('#{escape(id)}'));
+      visualizationCharts['#{escape(id)}'].draw(chartData['#{escape(id)}'], {#{option_str}});
     )
   end
 
@@ -112,9 +112,9 @@ module GoogleVisualization
       if val.kind_of? Hash
         str += "{" + parse_options(val) + "}"
       elsif val.kind_of? Array
-        str += "[ " + val.collect { |v| "'#{v}'" }.join(", ") + " ]"
+        str += "[ " + val.collect { |v| "'#{escape(v)}'" }.join(", ") + " ]"
       else
-        str += (val.kind_of?(String) ? "'#{val}'" : val.to_s)
+        str += (val.kind_of?(String) ? "'#{escape(val)}'" : val.to_s)
       end
       str
     end.join(',')
@@ -136,9 +136,9 @@ module GoogleVisualization
     debugging
   end
 
-  def escape_id(id)
-    if id
-      id.gsub(/'/, /\\'/)
+  def escape(s)
+    if s
+      s.gsub(/'/, "\\\\'")
     end
   end
 
