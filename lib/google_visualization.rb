@@ -142,9 +142,9 @@ module GoogleVisualization
     end
   end
 
-  def escaped_id(id)
-    if s
-      s.gsub(/["'\s]/, "_")
+  def escape_id(id)
+    if id
+      id.gsub(/["'\s]/, "_")
     end
   end
 
