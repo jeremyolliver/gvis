@@ -70,7 +70,7 @@ module GoogleVisualization
 
     # Output a div with given id on the page right now, that our graph will be embedded into
     html = html_options.collect {|key,value| "#{key}=\"#{value}\"" }.join(" ")
-    concat raw(%Q(<div id="#{id}" #{html}><!-- /--></div>))
+    concat raw(%Q(<div id="#{escape(id)}" #{html}><!-- /--></div>))
     nil # Return nil just incase this is called with an output erb tag, as we don't to output the html twice
   end
 
@@ -138,7 +138,7 @@ module GoogleVisualization
 
   def escape(s)
     if s
-      s.gsub(/(?<!\\)'/, "\\'")
+      s.gsub(/(?<!\\)'/, "\\'").gsub(' ', '_')
     end
   end
 
