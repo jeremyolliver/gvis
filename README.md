@@ -1,4 +1,4 @@
-Gvis
+Gvis [![Build Status](https://secure.travis-ci.org/jeremyolliver/gvis.png)](http://travis-ci.org/jeremyolliver/gvis)
 ====
 
 Rails plugin that provides a Ruby wrapper for easily loading the Google Visualization API, and simple generation of the javascript required to plot the graphs
