@@ -14,7 +14,7 @@ module GoogleVisualization
   # Include the Visualization API code from google.
   # (Omit this call if you prefer to include the API in your own js package)
   def include_visualization_api
-    javascript_include_tag("http://www.google.com/jsapi")
+    javascript_include_tag("//www.google.com/jsapi")
   end
 
   # Call this method from the within the head tag (or alternately just before the closing body tag)
@@ -70,7 +70,7 @@ module GoogleVisualization
 
     # Output a div with given id on the page right now, that our graph will be embedded into
     html = html_options.collect {|key,value| "#{key}=\"#{value}\"" }.join(" ")
-    concat raw(%Q(<div id="#{id}" #{html}><!-- /--></div>))
+    concat raw(%Q(<div id="#{escape_id(id)}" #{html}><!-- /--></div>))
     nil # Return nil just incase this is called with an output erb tag, as we don't to output the html twice
   end
 
@@ -90,16 +90,16 @@ module GoogleVisualization
   # @return [String] javascript that creates the chart, and adds it to the window variable
   def generate_visualization(id, chart_type, table, options={})
     # Generate the js chart data
-    output = "chartData['#{id}'] = new google.visualization.DataTable();"
+    output = "chartData['#{escape_id(id)}'] = new google.visualization.DataTable();"
     table.columns.each do |col|
-      output += "chartData['#{id}'].addColumn('#{table.column_types[col]}', '#{col}');"
+      output += "chartData['#{escape_id(id)}'].addColumn('#{escape(table.column_types[col])}', '#{escape(col)}');"
     end
     option_str = parse_options(options)
 
     output += %Q(
-      chartData['#{id}'].addRows(#{table.format_data});
-      visualizationCharts['#{id}'] = new google.visualization.#{chart_type.to_s.camelize}(document.getElementById('#{id}'));
-      visualizationCharts['#{id}'].draw(chartData['#{id}'], {#{option_str}});
+      chartData['#{escape_id(id)}'].addRows(#{table.format_data});
+      visualizationCharts['#{escape_id(id)}'] = new google.visualization.#{chart_type.to_s.camelize}(document.getElementById('#{escape_id(id)}'));
+      visualizationCharts['#{escape_id(id)}'].draw(chartData['#{escape_id(id)}'], {#{option_str}});
     )
   end
 
@@ -112,9 +112,9 @@ module GoogleVisualization
       if val.kind_of? Hash
         str += "{" + parse_options(val) + "}"
       elsif val.kind_of? Array
-        str += "[ " + val.collect { |v| "'#{v}'" }.join(", ") + " ]"
+        str += "[ " + val.collect { |v| "'#{escape(v)}'" }.join(", ") + " ]"
       else
-        str += (val.kind_of?(String) ? "'#{val}'" : val.to_s)
+        str += (val.kind_of?(String) ? "'#{escape(val)}'" : val.to_s)
       end
       str
     end.join(',')
@@ -134,6 +134,18 @@ module GoogleVisualization
       debugging = true if ["development", "test"].include? Rails.env
     end
     debugging
+  end
+
+  def escape(s)
+    if s
+      s.gsub(/(?<!\\)'/, "\\'")
+    end
+  end
+
+  def escape_id(id)
+    if id
+      id.gsub(/["'\s]/, "_")
+    end
   end
 
 end
