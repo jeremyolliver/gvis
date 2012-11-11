@@ -153,7 +153,7 @@ module GoogleVisualization
     if id
       # Let's be extra strict and validate for characters allowed in HTML id attribute.
       # Allow word characters (letters and underscores), digits, dashes, colons and periods.
-      id.gsub(/[^\w\d-\:\.]/, "_")
+      id.gsub(/[^\w\d\-\:\.]/, "_")
     end
   end
 
