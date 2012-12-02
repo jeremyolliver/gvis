@@ -18,9 +18,10 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'json'
 
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'minitest'
-  s.add_development_dependency 'rcov'
+  s.add_development_dependency 'simplecov'
   # Although this runs on rails 3, I'm only specifying this as development dependency for now,
   # (instead of runtime dependency) since rails can be vendored and need not be installed/required as gems
   s.add_development_dependency 'actionpack', '> 3.0.0'
