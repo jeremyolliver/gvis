@@ -121,7 +121,7 @@ module GoogleVisualization
       elsif val.kind_of? Array
         str += "[ " + val.collect { |v| "'#{escape(v)}'" }.join(", ") + " ]"
       else
-        str += (val.kind_of?(String) ? "'#{escape(val)}'" : val.to_s)
+        str += Gvis::DataCell.new(val).to_js
       end
       str
     end.join(',')

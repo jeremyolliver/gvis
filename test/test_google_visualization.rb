@@ -58,4 +58,15 @@ class TestGoogleVisualization < MiniTest::Unit::TestCase
     assert_match("<div id=\"my_chart\"", output, "The graph div should exist on the page")
   end
 
+  def test_annotated_timeline
+    output = @view.render("test/views/_annotatedtimeline.html.erb")
+    assert_match("'packages':['annotatedtimeline']", output, "the annotated timeline package should have been loaded")
+    assert_match("<div id=\"my_chart\"", output, "The graph div should exist on the page")
+    assert_match("zoomStartTime: new Date (2011,0,1)", output, "The a zoomStartTime date option should exist on the page")
+    assert_match("thickness: 11", output, "The a thickness number option should exist on the page")
+    assert_match("displayZoomButtons: true", output, "The a displayZoomButtons boolean option should exist on the page")
+    assert_match("timeofdayTest: [1,2,3,4]", output, "The a timeofDayTest timeofday option should exist on the page")
+    assert_match("nullTest: null", output, "The a nullTest null option should exist on the page")
+  end
+
 end
