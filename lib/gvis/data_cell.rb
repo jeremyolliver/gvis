@@ -18,13 +18,13 @@ module Gvis
       # Format/escape individual values for javascript, checking column types, and the ruby value as a failsafe
       if @type == "datetime" || @value.is_a?(DateTime)
         # Format a DateTime as a javascript date object down to seconds
-        @value.is_a?(String) ? @value : "new Date (#{@value.year},#{@value.month - 1},#{@value.day},#{@value.hour},#{@value.min},#{@value.sec})"
+        @value.is_a?(DateTime) ? "new Date (#{@value.year},#{@value.month - 1},#{@value.day},#{@value.hour},#{@value.min},#{@value.sec})" : @value.to_json
       elsif @type == "date" || @value.is_a?(Date)
         # Format a Date object as a javascript date
-        @value.is_a?(String) ? @value : "new Date (#{@value.year},#{@value.month - 1},#{@value.day})"
+        @value.is_a?(Date) ? "new Date (#{@value.year},#{@value.month - 1},#{@value.day})" : @value.to_json
       elsif @type == "timeofday" || @value.is_a?(Time)
         # Format a Time as a javascript date object down to milliseconds
-        @value.is_a?(String) ? @value : "[#{@value.hour},#{@value.min},#{@value.sec},#{@value.usec}]"
+        @value.is_a?(Time) ? "[#{@value.hour},#{@value.min},#{@value.sec},#{@value.usec}]" : @value.to_json
       else
         # Non date/time values can be JS escaped/formatted safely with # to_json
         @value.to_json
