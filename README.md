@@ -1,10 +1,9 @@
 Gvis
 ====
 
-[![Gem Version](https://badge.fury.io/rb/gvis.png)](http://badge.fury.io/rb/gvis) : Latest published version
+[![Gem Version](https://badge.fury.io/rb/gvis.png)](http://badge.fury.io/rb/gvis) : Latest published version on https://rubygems.org/
 
-Master branch status:
-[![Build Status](https://secure.travis-ci.org/jeremyolliver/gvis.png)](http://travis-ci.org/jeremyolliver/gvis) [![Code Climate](https://codeclimate.com/github/jeremyolliver/gvis.png)](https://codeclimate.com/github/jeremyolliver/gvis)
+[![Build Status](https://secure.travis-ci.org/jeremyolliver/gvis.png)](http://travis-ci.org/jeremyolliver/gvis) [![Coverage Status](https://coveralls.io/repos/jeremyolliver/gvis/badge.png?branch=master)](https://coveralls.io/r/jeremyolliver/gvis) [![Code Climate](https://codeclimate.com/github/jeremyolliver/gvis.png)](https://codeclimate.com/github/jeremyolliver/gvis) Current master branch status
 
 Rails plugin that provides a Ruby wrapper for easily loading the Google Visualization API, and simple generation of the javascript required to plot the graphs
 For a full list of the graphs provided by google's visualization api see the [gallery](http://code.google.com/apis/visualization/documentation/gallery.html)
