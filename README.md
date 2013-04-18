@@ -1,7 +1,7 @@
 Gvis
 ====
 
-[![Gem Version](https://badge.fury.io/rb/gvis.png)](http://badge.fury.io/rb/gvis) : Latest published version on https://rubygems.org/
+[![Gem Version](https://badge.fury.io/rb/gvis.png)](http://badge.fury.io/rb/gvis) : Latest published version on [rubygems.org](https://rubygems.org/gems/gvis/)
 
 [![Build Status](https://secure.travis-ci.org/jeremyolliver/gvis.png)](http://travis-ci.org/jeremyolliver/gvis) [![Coverage Status](https://coveralls.io/repos/jeremyolliver/gvis/badge.png?branch=master)](https://coveralls.io/r/jeremyolliver/gvis) [![Code Climate](https://codeclimate.com/github/jeremyolliver/gvis.png)](https://codeclimate.com/github/jeremyolliver/gvis) Current master branch status
 
