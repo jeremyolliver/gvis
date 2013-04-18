@@ -9,3 +9,8 @@ Rake::TestTask.new(:test) do |test|
 end
 
 task :default => :test
+
+# Pushes test coverage results to coveralls.io, we will only do this during CI builds
+require 'coveralls/rake/task'
+Coveralls::RakeTask.new
+task :test_with_coveralls => [:test, 'coveralls:push']
