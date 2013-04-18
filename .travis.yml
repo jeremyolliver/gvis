@@ -3,9 +3,8 @@ script: "bundle exec rake test_with_coveralls"
 rvm:
   - 1.9.2
   - 1.9.3
-  - jruby-18mode # JRuby in 1.8 mode
+  - 2.0.0
   - jruby-19mode # JRuby in 1.9 mode
-  - rbx-18mode
   - rbx-19mode
   - ruby-head
 notifications:
