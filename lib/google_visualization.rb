@@ -15,7 +15,7 @@ module GoogleVisualization
   # (Omit this call if you prefer to include the API in your own js package)
   def include_visualization_api
     # Ensure we use https when the page is loaded on https so we don't make the page look insecure
-    javascript_include_tag("https://www.google.com/jsapi")
+    javascript_include_tag("//www.google.com/jsapi")
   end
 
   # Call this method from the within the head tag (or alternately just before the closing body tag)
