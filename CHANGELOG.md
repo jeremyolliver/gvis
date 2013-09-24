@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.1.0
+-----
+
+* Support loading javascript via https (if the page is https)
+* escapes single quotes within values/id's
+* Official Support for 1.8.7 dropped (may, or may not work)
+
 2.0.4
 -----
 
