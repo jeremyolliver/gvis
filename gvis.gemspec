@@ -16,13 +16,14 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 
-  s.add_dependency 'json'
+  # Gem dependencies
+  s.add_runtime_dependency 'json'
 
+  # Gem development/test dependencies
   s.add_development_dependency 'rake'
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'minitest'
   s.add_development_dependency 'coveralls'
-  # Although this runs on rails 3, I'm only specifying this as development dependency for now,
-  # (instead of runtime dependency) since rails can be vendored and need not be installed/required as gems
-  s.add_development_dependency 'actionpack', '> 3.0.0'
+  s.add_development_dependency 'appraisal'
+  s.add_development_dependency 'actionpack', '> 3.0.0' # For rendering test views
 end
