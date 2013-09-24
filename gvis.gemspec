@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   # Gem dependencies
   s.add_runtime_dependency 'json'
+  s.add_runtime_dependency 'activesupport', '>= 3.0.0'
 
   # Gem development/test dependencies
   s.add_development_dependency 'rake'
@@ -25,5 +26,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'minitest'
   s.add_development_dependency 'coveralls'
   s.add_development_dependency 'appraisal'
-  s.add_development_dependency 'actionpack', '> 3.0.0' # For rendering test views
+  s.add_development_dependency 'actionpack', '>= 3.0.0' # For rendering test views
 end
