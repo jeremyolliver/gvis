@@ -12,6 +12,8 @@ Gem::Specification.new do |s|
   s.summary     = "Easily embed charts with Google Visualization API"
   s.description = "Easily embed charts with Google Visualization API, using ruby formatted options in your view files"
 
+  s.license     = "MIT"
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
