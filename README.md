@@ -71,5 +71,11 @@ Render desired graphs in the view like this:
 		]) %>
 	<% end %>
 
+Contributing
+============
+
+Pull requests for new features/bugfixes are welcome. If you're interested in helping maintaining gvis, please contact me.
+
+---
 
 Copyright (c) 2009 [Jeremy Olliver], released under the MIT license
